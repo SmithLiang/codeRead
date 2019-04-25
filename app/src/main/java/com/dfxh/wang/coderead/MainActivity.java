@@ -1,34 +1,98 @@
 package com.dfxh.wang.coderead;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
 
-import com.dfxh.wang.coderead.utils.L;
+import com.dfxh.wang.coderead.fragment.FragmentA;
+import com.dfxh.wang.coderead.fragment.FragmentB;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG ="MainActivity" ;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-    //mac 折叠所有方法是 command alt -
-    //
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    FragmentManager mFragmentManager;
+    //   List<Fragment> mFragmentList=new ArrayList<>();
+    private FragmentA mFragmentA;
+    private FragmentB mFragmentB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        L.d("daodishinali");
-        int i=100;
-        for (int i1 = 0; i1 < i; i1++) {
+        findViewById(R.id.btn_a).setOnClickListener(this);
+        findViewById(R.id.btn_b).setOnClickListener(this);
+        createFragments();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(MainActivity.this)){//加上判断
+            EventBus.getDefault().register(MainActivity.this);
         }
-        boolean b=false;
-        if (b) {
+    }
 
+    void createFragments(){
+        mFragmentManager=getSupportFragmentManager();
+        FragmentTransaction transaction= mFragmentManager.beginTransaction();
+
+        mFragmentA = new FragmentA();
+//        mFragmentList.add(mFragmentA);
+        transaction.add(R.id.fl_container, mFragmentA);
+
+        mFragmentB = new FragmentB();
+//        mFragmentList.add(mFragmentB);
+        transaction.add(R.id.fl_container, mFragmentB);
+
+        transaction.show(mFragmentA);
+        transaction.hide(mFragmentB);
+        transaction.commit();
+    }
+    void selectFragment(int id){
+        FragmentTransaction transaction= mFragmentManager.beginTransaction();
+        if (id==R.id.btn_a){
+            transaction.show(mFragmentA);
+            transaction.hide(mFragmentB);
+        }else {
+            transaction.show(mFragmentB);
+            transaction.hide(mFragmentA);
         }
+        //忘了提交所以才会重叠
+        transaction.commit();
 
     }
-    void show(){
-        Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "show: ");
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_a:
+                selectFragment(R.id.btn_a);
+                break;
+            case R.id.btn_b:
+                selectFragment(R.id.btn_b);
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(EventBus.getDefault().isRegistered(MainActivity.this)){//加上判断
+            EventBus.getDefault().unregister(MainActivity.this);
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveMessage(@NonNull MessageEvent event) {
+        if (event.what==100){
+            Log.d("wuliang","activity");
+        }
     }
 }
+
