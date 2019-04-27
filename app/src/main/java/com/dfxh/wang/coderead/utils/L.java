@@ -31,11 +31,9 @@ public class L {
             }
         return null;
     }
-
     public static String getMsgFormat(String msg){
         return msg+" ;"+getFunctionName();
     }
-
     public static void v(String msg){
         if (isDebug)
             Log.v(APPTAG,getMsgFormat(msg));
@@ -44,7 +42,6 @@ public class L {
         if (isDebug)
             Log.v(tag,getMsgFormat(msg));
     }
-
     public static void d(String msg){
         if (isDebug)
             Log.d(APPTAG,getMsgFormat(msg));

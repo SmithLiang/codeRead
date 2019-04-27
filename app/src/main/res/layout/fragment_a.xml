@@ -5,7 +5,10 @@
     android:gravity="center"
     android:layout_height="match_parent">
     <TextView
-        android:text="A"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:text="断点下载"
+        android:gravity="center"
+        android:id="@+id/tv_down"
+        android:clickable="true"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
 </LinearLayout>
