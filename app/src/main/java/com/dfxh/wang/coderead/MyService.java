@@ -6,17 +6,21 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.dfxh.wang.coderead.breakdownload.singleDowload.DownRunnable;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class MyService extends Service {
 
+    String url = "http://www.cagocc.cn:88/upload/apk/bdnavapp3_2.apk";
 
     @Override
     public void onCreate() {
         super.onCreate();
         EventBus.getDefault().register(this);
+        new Thread(new DownRunnable()).start();
     }
 
     @Override

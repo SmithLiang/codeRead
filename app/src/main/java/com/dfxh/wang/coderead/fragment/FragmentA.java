@@ -72,7 +72,7 @@ public class FragmentA extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        stopDolad();
+        //stopDolad();
         Log.d(TAG, "onPause: A");
     }
 

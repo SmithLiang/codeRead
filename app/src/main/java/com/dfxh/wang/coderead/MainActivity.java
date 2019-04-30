@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.dfxh.wang.coderead.fragment.FragmentA;
 import com.dfxh.wang.coderead.fragment.FragmentB;
+import com.dfxh.wang.coderead.utils.ShareUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_a).setOnClickListener(this);
         findViewById(R.id.btn_b).setOnClickListener(this);
         createFragments();
+
     }
 
     @Override
