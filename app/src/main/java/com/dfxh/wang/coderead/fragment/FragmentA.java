@@ -43,19 +43,19 @@ public class FragmentA extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v=inflater.inflate(R.layout.fragment_a,null);
         Log.d(TAG, "onCreateView: A");
-        setFileLength(0);
-        v.findViewById(R.id.tv_down).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isStop){
-                    stopDolad();
-                    isStop=false;
-                }else {
-                    downLoad();
-                    isStop=true;
-                }
-            }
-        });
+//        setFileLength(0);
+//        v.findViewById(R.id.tv_down).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (isStop){
+//                    stopDolad();
+//                    isStop=false;
+//                }else {
+//                    downLoad();
+//                    isStop=true;
+//                }
+//            }
+//        });
         return v;
     }
 
@@ -65,7 +65,7 @@ public class FragmentA extends Fragment {
         if(!EventBus.getDefault().isRegistered(this)){//加上判断
             EventBus.getDefault().register(this);
         }
-        getActivity().startService(new Intent(getContext(), MyService.class));
+        //getActivity().startService(new Intent(getContext(), MyService.class));
         Log.d(TAG, "onStart: A");
     }
 

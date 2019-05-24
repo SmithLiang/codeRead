@@ -3,7 +3,6 @@ package com.dfxh.wang.coderead.utils;
 import java.io.IOException;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class ShareUtil
 {

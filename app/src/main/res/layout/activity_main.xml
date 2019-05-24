@@ -32,6 +32,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_b"
             android:layout_weight="1"/>
+        <Button
+            android:text="C"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_c"
+            android:layout_weight="1"/>
     </LinearLayout>
 
 </LinearLayout>

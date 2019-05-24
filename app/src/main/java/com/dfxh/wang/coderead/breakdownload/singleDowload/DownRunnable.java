@@ -32,6 +32,7 @@ public class DownRunnable implements Runnable {
      * 4.考虑一下情况
      * 卸载了apk shared值为0,会出错
      * 安装完成以后,shared值0,完成的安装包complen不为0,会出错
+     * 解决办法:下载完成后安装后,删除本地apk
      */
     private  String appfilePath = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/A/a.apk";
    // String url="https://download.alicdn.com/wireless/taobao4android/latest/702757.apk";
@@ -50,31 +51,35 @@ public class DownRunnable implements Runnable {
         try {
             file= new File(appfilePath);
             compleLen = file.length();
-            totalLen = ShareUtil.get().getLong("totalLen");
-            Log.d(TAG, "run: 已经下载"+compleLen);
-            Log.d(TAG, "run: 总共大小"+totalLen);
-            if (compleLen>totalLen){
-                //证明软件卸载了,shared值为0,下载文件还在,或者已完成了下载,没有删除原来包
-                //解决方法:删除原来安装包重新下载 ,新建一个文件下载
-                if (file.exists()){
-                    file.delete();
-                    //重新创建文件
-                    Log.d(TAG, "run: 执行到这方法了");
-                    file= new File(appfilePath);
-                }
-            }
-                accessFile = new RandomAccessFile(file,"rwd");//随机读写,写入文件
-                connection = (HttpURLConnection) new URL(url).openConnection();
-                connection.setConnectTimeout(10*1000);
-                connection.setReadTimeout(10*1000);
-                connection.setRequestMethod("GET");
+            accessFile = new RandomAccessFile(file,"rwd");//随机读写,写入文件
 
+            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.setConnectTimeout(10*1000);
+            connection.setReadTimeout(10*1000);
+            connection.setRequestMethod("GET");
 
                 if (compleLen==0){//如果长度为0,证明是新任务,需要从头下载
                     //获取文件长度
                     totalLen = Long.parseLong(connection.getHeaderField("content-length"));
                     ShareUtil.get().set("totalLen",totalLen);
                 }else {
+                    totalLen = ShareUtil.get().getLong("totalLen");
+//                    if (compleLen>totalLen){
+//                        //证明软件卸载了,shared值为0,下载文件还在,或者已完成了下载,没有删除原来包
+//                        //解决方法:删除原来安装包重新下载 ,新建一个文件下载
+//                        if (file.exists()){
+//                            file.delete();
+//                            //重新创建文件
+//                            Log.d(TAG, "run: 执行到这方法了");
+//                            accessFile.close();
+//                            file= new File(appfilePath);
+//                            accessFile = new RandomAccessFile(file,"rwd");//随机读写,写入文件
+//                            compleLen = file.length();
+//                        }
+//                        //获取文件长度
+//                        totalLen = Long.parseLong(connection.getHeaderField("content-length"));
+//                        ShareUtil.get().set("totalLen",totalLen);
+//                    }
                     //设置属性,已完成-文件总大小
                     connection.setRequestProperty("Range","bytes="+compleLen+"-"+totalLen);
                     Log.d(TAG, "run: 总长度长度"+totalLen);
@@ -93,6 +98,7 @@ public class DownRunnable implements Runnable {
                     Log.d(TAG, "下载完成");
                     ShareUtil.get().set("totalLen",0l);//完成后把长度重置
                     EventBus.getDefault().post(new MessageEvent(101,""));
+                    //todo 安装apk,再次启动以后删除已经安装的apk文件
                 }else {
                     Log.d(TAG, "下载停止");
                 }
